@@ -1,17 +1,22 @@
 package com.viceversa.test.service;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.viceversa.test.vo.Response;
+import com.viceversa.test.vo.Result;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Mono;
 
-import java.util.Collections;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class CollectService {
@@ -29,8 +34,11 @@ public class CollectService {
 
     private final WebClient webClient;
 
+    private final ObjectMapper objectMapper;
+
     public CollectService() {
         this.webClient = WebClient.create(endpoint);
+        this.objectMapper = new ObjectMapper();
     }
 
     public String callJsonData(){
@@ -44,27 +52,37 @@ public class CollectService {
 //
         UriComponents uri = UriComponentsBuilder
                 .fromHttpUrl(endpoint)
-                .queryParam("serviceKey",decodingKey)
+                .queryParam("serviceKey",encodingKey)
                 .queryParam("arrange","A")
                 .queryParam("_type","json")
                 .queryParam("MobileApp","AppTest")
                 .queryParam("MobileOS","ETC")
                 .queryParam("numOfRows","10")
-                .queryParam("pageNo","1").build();
+                .queryParam("pageNo","1").build(true);
 
 
         System.out.println(uri.toString());
+
+        Result response =
         webClient
                 .get()
 //                .uri("https://apis.data.go.kr/B551011/PhotoGalleryService1/galleryList1?serviceKey=3t7IGETT+ssSjcJ2xZnLiSzQ9YFdKADJOqaJ+1fknQ30VM7sRJgEiI97aKomyXVwQlNX9uiJ6vx5Cy9BP84Hhg==&arrange=A&_type=json&MobileApp=AppTest&MobileOS=ETC&numOfRows=10&pageNo=1")
-                .uri(uri.toString())
+                .uri(uri.toUri())
                 .header("accept", "*/*")
-                .retrieve()
-                .bodyToMono(String.class)
-                .subscribe(result -> {
-                    System.out.println("타냐");
-                    System.out.println(result);
-                });
+                .exchangeToMono( res ->{
+                    if(res.statusCode() == HttpStatus.OK){
+                        return res.bodyToMono(Result.class);
+                    } else {
+                        return Mono.empty();
+                    }
+                })
+                .block();
+
+
+
+
+
+
 
 
 
