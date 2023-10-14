@@ -1,0 +1,6 @@
+data:
+  api:
+    key:
+      encoding: 3t7IGETT%2BssSjcJ2xZnLiSzQ9YFdKADJOqaJ%2B1fknQ30VM7sRJgEiI97aKomyXVwQlNX9uiJ6vx5Cy9BP84Hhg%3D%3D
+      decoding: 3t7IGETT+ssSjcJ2xZnLiSzQ9YFdKADJOqaJ+1fknQ30VM7sRJgEiI97aKomyXVwQlNX9uiJ6vx5Cy9BP84Hhg==
+    endpoint: https://apis.data.go.kr/B551011/PhotoGalleryService1/galleryList1
