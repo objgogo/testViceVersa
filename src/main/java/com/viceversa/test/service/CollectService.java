@@ -59,7 +59,7 @@ public class CollectService {
         this.collectRepository = collectRepository;
     }
 
-    public String collectGalleryList() throws JsonProcessingException {
+    public String collectGalleryList(RequestVo req) throws JsonProcessingException {
 
         UriComponents uri = UriComponentsBuilder
                 .fromHttpUrl(endpoint + "/galleryList1")
@@ -69,7 +69,7 @@ public class CollectService {
                 .queryParam("MobileApp","AppTest")
                 .queryParam("MobileOS","ETC")
                 .queryParam("numOfRows","50")
-                .queryParam("pageNo","1").build(true);
+                .queryParam("pageNo",req.getPageNo()).build(true);
 
         String responseStr =
         webClient
@@ -130,9 +130,9 @@ public class CollectService {
                 .queryParam("_type","json")
                 .queryParam("MobileApp","AppTest")
                 .queryParam("MobileOS","ETC")
-                .queryParam("numOfRows","10")
+                .queryParam("numOfRows","50")
                 .queryParam("title", URLEncoder.encode(req.getTitle(),"UTF-8"))
-                .queryParam("pageNo","1")
+                .queryParam("pageNo",req.getPageNo())
                 .build(true);
 
         String responseStr =
