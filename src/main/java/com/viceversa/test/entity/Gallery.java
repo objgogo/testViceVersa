@@ -1,5 +1,6 @@
 package com.viceversa.test.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,8 +18,8 @@ public class Gallery {
     @Column(name = "id")
     private long id;
 
-    private long galContentId;
-    private long galContentTypeId;
+    private String galContentId;
+    private String galContentTypeId;
     private String galTitle;
     private String galWebImageUrl;
     private String galCreatedtime;
@@ -27,4 +28,11 @@ public class Gallery {
     private String galPhotographyLocation;
     private String galPhotographer;
     private String galSearchKeyword;
+
+
+    @ManyToOne(targetEntity = Collect.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "collect_id")
+    @JsonIgnore
+    private Collect collect;
+
 }
